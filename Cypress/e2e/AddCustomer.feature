@@ -1,30 +1,30 @@
-Feature: Add New Customer
+Feature: Add New Customer for Wheeltek
 
     Background: Pre conditions
         Given user is in the login page
-        When user input valid email 'hani@test.com' and password '123456'
-        And user click SignIn button
+        When user input valid email 'hani@test.co' and password '123456'
+        And user click Login button
+        And user clicks on the LOS module
         Then User shall see login success message and redirect to LOS main page
 
-    Scenario: Verify New Customer Page and Mandatory fields
-        Given User is on LOS main page
-        When user clicks on New Customer
-        Then user will direct to the New Customer Page
-        When user clicks Save button
-        Then Users will see the required fields cannot be empty
-
     Scenario: Verify Cancel button
-        Given User is on LOS main page
-        When user clicks on New Customer
-        Then user will direct to the New Customer Page
-        When user clicks Cancel button
-        Then Users will direct to the LOS main page
+       Given User is on LOS main page
+       When user clicks on New Customer
+       Then user will direct to the New Customer Page
+       When user clicks Cancel button
+       Then Users will direct to the main page
     
     Scenario: Add New Customer
         Given User is on LOS main page
         When user clicks on New Customer
-        When user fill all the mandatory fields
         When user clicks Save button
+        Then Users will see the required fields cannot be empty
+        When user fill the type of app
+        And user input customer name 'Hani' and 'test' and 'Integration'
+        When user fill all the mandatory fields
+        And user upload selfie image
+        And user add identification ID
+        When user submit the customer
         Then user will see toast message 'New customer have been added successfully.'
         When user clicks on View button
         Then user will see the customer added successfully
