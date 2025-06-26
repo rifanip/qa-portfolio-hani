@@ -22,6 +22,9 @@ Feature: Add New Customer for Wheeltek
         When user fill the type of app
         And user input customer name 'Hani' and 'test' and 'Integration'
         When user fill all the mandatory fields
+        And User input mobile number less than 10 digits
+        And User input wrong email format
+        And User Add social media account
         And user upload selfie image
         And user add identification ID
         When user submit the customer
