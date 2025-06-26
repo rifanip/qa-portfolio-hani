@@ -22,7 +22,19 @@
 - **Preconditions**: User login as sales
 - **Steps**:
   1. Click Add New Customer in the homepage
-  1. Leave all fields blank
-  2. Click Save button
-- **Expected**: Validation messages appear: "Please Enter the Required field(s)" and user remains in the new customer page
+  2. Leave all fields blank
+  3. Click Save button
+- **Expected**: Validation messages appear: "Please Enter the Required field(s)" and remain on the new customer page
+
+---
+
+### TC-004: Unsuccessful customer creation
+- **Preconditions**: User login as sales
+- **Steps**:
+  1. Click Add New Customer in the homepage
+  2. Enter an ID number that is already used by an existing user
+  3. Enter all fields
+  4. Click Save button
+- **Expected**: Validation messages appear: “Unsuccessful customer creation” and remain on the new customer page
+
 
