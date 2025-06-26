@@ -1,8 +1,7 @@
 import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";
-import CreateNewCustomerElements from "../object_repository/CreateNewCustomerElements";
+import CustomerElements from "../object_repository/CreateNewCustomerElements";
 import 'cypress-real-events/support'
 import 'cypress-file-upload'
-import SearchCustomerElements from "../object_repository/SearchCustomerElements";
 
 beforeEach(() => {
   cy.intercept('GET', '**/check-token-validity').as('checkToken');
@@ -49,28 +48,6 @@ When ('user submit the customer', ()=>{
 
 Then ('Users will see the required fields cannot be empty', ()=>{
     CreateNewCustomerElements.mandatorychecking().should('be.visible')
-})
-
-When ('user fill all the mandatory fields', ()=>{
-    CreateNewCustomerElements.branch().should('not.contain', 'Select Branch')
-    CreateNewCustomerElements.portofolio().click()
-    cy.contains('button.dropdown-item', 'Two Wheeler').click()
-    CreateNewCustomerElements.purposeofpurchase().click()
-    cy.contains('button.dropdown-item', 'Business').click()
-    CreateNewCustomerElements.interest().click()
-    cy.contains('button.dropdown-item', 'Cold').click()
-    CreateNewCustomerElements.customersource().click()
-    cy.contains('button.dropdown-item', 'PSR').click()
-    CreateNewCustomerElements.suffix().click()
-    cy.contains('button.dropdown-item', 'Jr.').click({force: true});
-    CreateNewCustomerElements.dob().type('14/04/1999')
-    CreateNewCustomerElements.mobileno().type('93312121')
-    CreateNewCustomerElements.savebutton().click()
-    cy.xpath("//span[.='Invalid Number']").should('be.visible')
-    CreateNewCustomerElements.mobileno().type('91')
-    CreateNewCustomerElements.mobileNoOwner().click()
-    cy.contains('button.dropdown-item', 'Parents').click()
-    CreateNewCustomerElements.checklist().click()
 })
 
 Then ('user input customer name {string} and {string} and {string}', (firstname, middlename, lastname)=>{
@@ -124,8 +101,7 @@ When ('user add identification ID', ()=>{
     cy.wait('@getIdentify').its('response.statusCode').should('eq', 200)
 })
 
-// wheeltek & newnemar
-When ('user fill all the mandatory fields for wheeltek and newnemar', ()=>{
+When ('user fill all the mandatory fields', ()=>{
     CreateNewCustomerElements.branch().should('not.contain', 'Select Branch')
     CreateNewCustomerElements.salesagent().should('not.contain', 'Select Sales Agent')
     CreateNewCustomerElements.portofolio().click()
@@ -142,69 +118,7 @@ When ('user fill all the mandatory fields for wheeltek and newnemar', ()=>{
     cy.get('.theme-datepicker-header-month-selector .arrow-icon').eq(0).click()
     cy.xpath("//span[.='Feb']").click()
     cy.get('.react-datepicker__day--023').click()
-    // CreateNewCustomerElements.alias().click()
-    CreateNewCustomerElements.mobileno().type('9118228322')
-    CreateNewCustomerElements.mobilenoOwner().click()
-    cy.contains('button.dropdown-item', 'Applicant').click()
-    CreateNewCustomerElements.checklist().click()
-})
-
-Then ('user upload selfie image', ()=>{
-    CreateNewCustomerElements.Image().first().selectFile('cypress/fixtures/example.png', { force: true });
-    CreateNewCustomerElements.Loader().should('not.be.visible')
-    cy.wait('@postSelfie').its('response.statusCode').should('eq', 200)
-    cy.wait('@getSelfie').its('response.statusCode').should('eq', 200)
-    cy.wait(2000)
-})
-When ('user type wrong mobile number and see the Validation', ()=>{
-    CreateNewCustomerElements.mobileno().type('91182222')
-    CreateNewCustomerElements.savebutton().click()
-    cy.xpath("//span[.='Invalid Number']").should('be.visible')
-})
-Then ('user type valid mobile number and validation is gone', ()=>{
-    CreateNewCustomerElements.mobileno().clear().type('9167836271')
-    cy.xpath("//span[.='Invalid Number']").should('not.exist')
-})
-When ('user type wrong email address and see the Validation', ()=>{
-    CreateNewCustomerElements.email().type('email@add')
-    cy.xpath("//span[.='This Email is Invalid']").should('be.visible')
-})
-Then ('user type valid email address and validation is gone', ()=>{
-    CreateNewCustomerElements.email().type('.com')
-    cy.xpath("//span[.='This Email is Invalid']").should('not.exist')
-})
-When ('user click on add social media button', ()=>{
-    CreateNewCustomerElements.socmeddropdown().click()
-    cy.xpath("//button[.='Twitter']").click()
-    CreateNewCustomerElements.socmedlink().type('test social media')
-    CreateNewCustomerElements.addsocmed().click()
-})
-Then ('user should see the placeholder for the second social media', ()=>{
-    CreateNewCustomerElements.deletesocmed().should('be.visible')
-})
-
-When ('User select date of birth and validate today cannot be selected', ()=>{
-    const today = new Date();
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const yyyy = today.getFullYear();
-    const formattedDate = `${dd}/${mm}/${yyyy}`;
-  
-    // open datepicker
-    CreateNewCustomerElements.dob().click();
-  
-    // ensure value is not today
-    CreateNewCustomerElements.dob().should('not.have.value', formattedDate);
-  
-    // find todays element and ensure is disabled
-    const dayNumber = String(today.getDate()).padStart(3, '0');
-    cy.get(`.react-datepicker__day--${dayNumber}`)
-      .should('have.class', 'react-datepicker__day--disabled')
-      .and('have.attr', 'aria-disabled', 'true');
-})
-
-Then ('Age automatically calculated', ()=>{
-    CreateNewCustomerElements.dob().type('17/06/1996')
+    // validate age
     CreateNewCustomerElements.dob().invoke('val').then((birthdateStr) => {
     // format DD/MM/YYYY)
     const [day, month, year] = birthdateStr.split('/');
@@ -219,29 +133,37 @@ Then ('Age automatically calculated', ()=>{
     // Age Validation
     cy.get("[placeholder='Enter Age']").should('have.value', expectedAge.toString());
     })
-    CreateNewCustomerElements.alias().click()
+    CreateNewCustomerElements.mobilenoOwner().click()
+    cy.contains('button.dropdown-item', 'Applicant').click()
+    CreateNewCustomerElements.checklist().click()
 })
 
-When ('user clicks on month search and search the customer', ()=>{
-    const today = new Date();
-    const month = today.toLocaleString('default', { month: 'long' });
-    const year = today.getFullYear();
-    const monthYear = `${month} ${year}`;
-    SearchCustomerElements.years().type(monthYear)
-    SearchCustomerElements.searchId().click()
-    SearchCustomerElements.search().click()
-    cy.get('.loader', { timeout: 10000 }).should('not.exist')
+Then ('user upload selfie image', ()=>{
+    CreateNewCustomerElements.Image().first().selectFile('cypress/fixtures/example.png', { force: true });
+    CreateNewCustomerElements.Loader().should('not.be.visible')
+    cy.wait('@postSelfie').its('response.statusCode').should('eq', 200)
+    cy.wait('@getSelfie').its('response.statusCode').should('eq', 200)
+    cy.wait(2000)
 })
-
-When ('user clicks on the existing customer', ()=>{
-    SearchCustomerElements.customerList().click()
-    cy.get('.loader', { timeout: 10000 }).should('not.exist')
-    CreateNewCustomerElements.savebutton().should('be.visible')
-})
-
-When ('user update the last name and save', ()=>{
-    CreateNewCustomerElements.lastname().type(' Update')
+When ('User input mobile number less than 10 digits', ()=>{
+    CreateNewCustomerElements.mobileno().type('91182222')
     CreateNewCustomerElements.savebutton().click()
+    cy.xpath("//span[.='Invalid Number']").should('be.visible')
+    CreateNewCustomerElements.mobileno().clear().type('9167836271')
+    cy.xpath("//span[.='Invalid Number']").should('not.exist')
+})
+When ('User input wrong email format', ()=>{
+    CreateNewCustomerElements.email().type('email@add')
+    cy.xpath("//span[.='This Email is Invalid']").should('be.visible')
+    CreateNewCustomerElements.email().type('.com')
+    cy.xpath("//span[.='This Email is Invalid']").should('not.exist')
+})
+When ('User Add social media account', ()=>{
+    CreateNewCustomerElements.socmeddropdown().click()
+    cy.xpath("//button[.='Twitter']").click()
+    CreateNewCustomerElements.socmedlink().type('test social media')
+    CreateNewCustomerElements.addsocmed().click()
+    CreateNewCustomerElements.deletesocmed().should('be.visible')
 })
 
 Then ('user will see toast message Profile has been updated successfully', ()=>{
