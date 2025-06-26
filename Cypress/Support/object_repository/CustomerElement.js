@@ -1,4 +1,4 @@
-class CreateNewCustomerElements {
+class CustomerElements {
 
     LoanMainPage() {
         return cy.get('[data-testid="loan-origination-title"]')
@@ -107,4 +107,4 @@ class CreateNewCustomerElements {
     }
 
 }
-export default new CreateNewCustomerElements()
+export default new CustomerElements()
