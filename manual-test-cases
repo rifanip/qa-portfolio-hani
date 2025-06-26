@@ -1,1 +1,35 @@
+Feature: Customer Page
 
+  As a QA Engineer
+  I want to test the customer creation and update flow
+  So that the system behaves correctly for valid and invalid inputs
+
+  Background:
+    Given the user is logged in
+    And the user navigates to the Customer Page
+
+  Scenario: Add new customer with valid details
+    When the user clicks on "Add Customer"
+    And the user enters "John" in the First Name field
+    And the user enters "Doe" in the Last Name field
+    And the user enters "john.doe@example.com" in the Email field
+    And the user clicks "Save"
+    Then the system should show message "Customer added successfully"
+    And the customer "John Doe" should be listed in the customer table
+
+  Scenario: Add customer with missing fields
+    When the user clicks on "Add Customer"
+    And the user leaves all fields blank
+    And the user clicks "Save"
+    Then the system should display validation errors:
+      | Field      | Message                  |
+      | First Name | "First Name is required" |
+      | Email      | "Email is required"      |
+
+  Scenario: Update existing customer
+    Given a customer "John Doe" exists
+    When the user clicks "Edit" for "John Doe"
+    And the user updates the Last Name to "Smith"
+    And the user clicks "Save"
+    Then the system should show message "Customer updated successfully"
+    And the customer name should be updated to "John Smith"
